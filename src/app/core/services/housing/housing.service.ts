@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { HousingLocationInfo } from './housing.interface';
 
 @Injectable({
@@ -9,17 +11,14 @@ export class HousingService {
   url = 'http://localhost:3000/locations';
   housingLocationList: HousingLocationInfo[] = [];
 
-  async getAllHousingLocations(): Promise<HousingLocationInfo[]> {
-    const data = await fetch(this.url);
+  constructor(private http: HttpClient){}
 
-    return (await data.json()) ?? []
+  getAllHousingLocations(): Observable<HousingLocationInfo[]> {
+    return this.http.get<HousingLocationInfo[]>(this.url);
   };
 
-  async getHousingLocationById(id: number): Promise<HousingLocationInfo | undefined> {
-    const data = await fetch(`${this.url}?id=${id}`);
-    const locationJson = await data.json();
-
-    return locationJson[0] ?? {}
+  getHousingLocationById(id: number): Observable<HousingLocationInfo[]> {
+    return this.http.get<HousingLocationInfo[]>(`${this.url}?id=${id}`);
   }
 
   submitApplication(firstName: string, lastName: string, email: string) {

@@ -16,15 +16,15 @@
         <h2 class="section-heading">Apply to live here</h2>
         <form [formGroup]="applyForm" (submit)="submitApplication()">
             <label for="first-name">First Name</label>
-            <input id="first-name" type="text" formControlName="firstName">
+            <input id="first-name" type="text" formControlName="firstName" required>
 
             <label for="last-name">Last Name</label>
-            <input id="last-name" type="text" formControlName="lastName">
+            <input id="last-name" type="text" formControlName="lastName" required>
 
             <label for="email">Email</label>
-            <input id="email" type="email" formControlName="email">
+            <input id="email" type="email" formControlName="email" required>
 
-            <button type="submit" class="primary">Apply now</button>
+            <button type="submit" [disabled]="!applyForm.valid" class="primary">Apply now</button>
         </form>
     </section>
 </article>

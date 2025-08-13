@@ -1,33 +1,32 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {HousingLocationComponent} from '../../shared/components/housing-location/housing-location';
-import { HousingService, HousingLocationInfo } from '../../services';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { CommonModule} from '@angular/common'
+import { HousingLocationComponent } from '../../shared/components';
+import { HousingService, HousingLocationInfo } from '../../core/services';
 
 @Component({
   selector: 'app-home',
-  imports: [HousingLocationComponent],
-  templateUrl: './home.html',
-  styleUrls: ['./home.scss'],
+  imports: [HousingLocationComponent, CommonModule],
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
-
   housingLocationList: HousingLocationInfo[] = [];
-  // housingService: HousingService = inject(HousingService);
   filteredLocationList: HousingLocationInfo[] = [];
 
-  constructor(private housingService: HousingService){}
+  constructor(private housingService: HousingService, private cdr: ChangeDetectorRef){}
 
   ngOnInit(): void {
     this.housingService
     .getAllHousingLocations()
-    .then((housingLocationList: HousingLocationInfo[]) => {
+    .subscribe((housingLocationList: HousingLocationInfo[]) => {
       this.housingLocationList = housingLocationList;
       this.filteredLocationList = housingLocationList;
+      this.cdr.markForCheck();
     })
-
   }
 
   filterResults(text: string) {
-    console.log(text)
     if (!text) {
       this.filteredLocationList = this.housingLocationList;
       return;
@@ -36,4 +35,5 @@ export class HomeComponent implements OnInit {
       housingLocation?.city.toLowerCase().includes(text.toLowerCase()), 
     );
   }
+
 }
